@@ -10,33 +10,239 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppMisSolicitudesRouteImport } from './routes/_app/mis-solicitudes'
+import { Route as AppNotificacionesRouteImport } from './routes/_app/notificaciones'
+import { Route as AppPanelResponsableRouteImport } from './routes/_app/panel-responsable'
+import { Route as AppPerfilRouteImport } from './routes/_app/perfil'
+import { Route as AppReportesRouteImport } from './routes/_app/reportes'
+import { Route as AppAdminAuditoriaRouteImport } from './routes/_app/admin/auditoria'
+import { Route as AppAdminConfiguracionRouteImport } from './routes/_app/admin/configuracion'
+import { Route as AppAdminDepartamentosRouteImport } from './routes/_app/admin/departamentos'
+import { Route as AppAdminTiposRouteImport } from './routes/_app/admin/tipos'
+import { Route as AppAdminUsuariosRouteImport } from './routes/_app/admin/usuarios'
+import { Route as AppSolicitudesIndexRouteImport } from './routes/_app/solicitudes/index'
+import { Route as AppSolicitudesIdRouteImport } from './routes/_app/solicitudes/$id'
+import { Route as AppSolicitudesNuevaRouteImport } from './routes/_app/solicitudes/nueva'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMisSolicitudesRoute = AppMisSolicitudesRouteImport.update({
+  id: '/mis-solicitudes',
+  path: '/mis-solicitudes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificacionesRoute = AppNotificacionesRouteImport.update({
+  id: '/notificaciones',
+  path: '/notificaciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPanelResponsableRoute = AppPanelResponsableRouteImport.update({
+  id: '/panel-responsable',
+  path: '/panel-responsable',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportesRoute = AppReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminAuditoriaRoute = AppAdminAuditoriaRouteImport.update({
+  id: '/admin/auditoria',
+  path: '/admin/auditoria',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminConfiguracionRoute = AppAdminConfiguracionRouteImport.update({
+  id: '/admin/configuracion',
+  path: '/admin/configuracion',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminDepartamentosRoute = AppAdminDepartamentosRouteImport.update({
+  id: '/admin/departamentos',
+  path: '/admin/departamentos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminTiposRoute = AppAdminTiposRouteImport.update({
+  id: '/admin/tipos',
+  path: '/admin/tipos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminUsuariosRoute = AppAdminUsuariosRouteImport.update({
+  id: '/admin/usuarios',
+  path: '/admin/usuarios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSolicitudesIndexRoute = AppSolicitudesIndexRouteImport.update({
+  id: '/solicitudes/',
+  path: '/solicitudes/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSolicitudesIdRoute = AppSolicitudesIdRouteImport.update({
+  id: '/solicitudes/$id',
+  path: '/solicitudes/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSolicitudesNuevaRoute = AppSolicitudesNuevaRouteImport.update({
+  id: '/solicitudes/nueva',
+  path: '/solicitudes/nueva',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/mis-solicitudes': typeof AppMisSolicitudesRoute
+  '/notificaciones': typeof AppNotificacionesRoute
+  '/panel-responsable': typeof AppPanelResponsableRoute
+  '/perfil': typeof AppPerfilRoute
+  '/reportes': typeof AppReportesRoute
+  '/admin/auditoria': typeof AppAdminAuditoriaRoute
+  '/admin/configuracion': typeof AppAdminConfiguracionRoute
+  '/admin/departamentos': typeof AppAdminDepartamentosRoute
+  '/admin/tipos': typeof AppAdminTiposRoute
+  '/admin/usuarios': typeof AppAdminUsuariosRoute
+  '/solicitudes/$id': typeof AppSolicitudesIdRoute
+  '/solicitudes/nueva': typeof AppSolicitudesNuevaRoute
+  '/solicitudes/': typeof AppSolicitudesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/mis-solicitudes': typeof AppMisSolicitudesRoute
+  '/notificaciones': typeof AppNotificacionesRoute
+  '/panel-responsable': typeof AppPanelResponsableRoute
+  '/perfil': typeof AppPerfilRoute
+  '/reportes': typeof AppReportesRoute
+  '/admin/auditoria': typeof AppAdminAuditoriaRoute
+  '/admin/configuracion': typeof AppAdminConfiguracionRoute
+  '/admin/departamentos': typeof AppAdminDepartamentosRoute
+  '/admin/tipos': typeof AppAdminTiposRoute
+  '/admin/usuarios': typeof AppAdminUsuariosRoute
+  '/solicitudes/$id': typeof AppSolicitudesIdRoute
+  '/solicitudes/nueva': typeof AppSolicitudesNuevaRoute
+  '/solicitudes': typeof AppSolicitudesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/mis-solicitudes': typeof AppMisSolicitudesRoute
+  '/_app/notificaciones': typeof AppNotificacionesRoute
+  '/_app/panel-responsable': typeof AppPanelResponsableRoute
+  '/_app/perfil': typeof AppPerfilRoute
+  '/_app/reportes': typeof AppReportesRoute
+  '/_app/admin/auditoria': typeof AppAdminAuditoriaRoute
+  '/_app/admin/configuracion': typeof AppAdminConfiguracionRoute
+  '/_app/admin/departamentos': typeof AppAdminDepartamentosRoute
+  '/_app/admin/tipos': typeof AppAdminTiposRoute
+  '/_app/admin/usuarios': typeof AppAdminUsuariosRoute
+  '/_app/solicitudes/$id': typeof AppSolicitudesIdRoute
+  '/_app/solicitudes/nueva': typeof AppSolicitudesNuevaRoute
+  '/_app/solicitudes/': typeof AppSolicitudesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/dashboard'
+    | '/mis-solicitudes'
+    | '/notificaciones'
+    | '/panel-responsable'
+    | '/perfil'
+    | '/reportes'
+    | '/admin/auditoria'
+    | '/admin/configuracion'
+    | '/admin/departamentos'
+    | '/admin/tipos'
+    | '/admin/usuarios'
+    | '/solicitudes/$id'
+    | '/solicitudes/nueva'
+    | '/solicitudes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/dashboard'
+    | '/mis-solicitudes'
+    | '/notificaciones'
+    | '/panel-responsable'
+    | '/perfil'
+    | '/reportes'
+    | '/admin/auditoria'
+    | '/admin/configuracion'
+    | '/admin/departamentos'
+    | '/admin/tipos'
+    | '/admin/usuarios'
+    | '/solicitudes/$id'
+    | '/solicitudes/nueva'
+    | '/solicitudes'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/reset-password'
+    | '/_app/dashboard'
+    | '/_app/mis-solicitudes'
+    | '/_app/notificaciones'
+    | '/_app/panel-responsable'
+    | '/_app/perfil'
+    | '/_app/reportes'
+    | '/_app/admin/auditoria'
+    | '/_app/admin/configuracion'
+    | '/_app/admin/departamentos'
+    | '/_app/admin/tipos'
+    | '/_app/admin/usuarios'
+    | '/_app/solicitudes/$id'
+    | '/_app/solicitudes/nueva'
+    | '/_app/solicitudes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +254,169 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mis-solicitudes': {
+      id: '/_app/mis-solicitudes'
+      path: '/mis-solicitudes'
+      fullPath: '/mis-solicitudes'
+      preLoaderRoute: typeof AppMisSolicitudesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notificaciones': {
+      id: '/_app/notificaciones'
+      path: '/notificaciones'
+      fullPath: '/notificaciones'
+      preLoaderRoute: typeof AppNotificacionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/panel-responsable': {
+      id: '/_app/panel-responsable'
+      path: '/panel-responsable'
+      fullPath: '/panel-responsable'
+      preLoaderRoute: typeof AppPanelResponsableRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/perfil': {
+      id: '/_app/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reportes': {
+      id: '/_app/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof AppReportesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/auditoria': {
+      id: '/_app/admin/auditoria'
+      path: '/admin/auditoria'
+      fullPath: '/admin/auditoria'
+      preLoaderRoute: typeof AppAdminAuditoriaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/configuracion': {
+      id: '/_app/admin/configuracion'
+      path: '/admin/configuracion'
+      fullPath: '/admin/configuracion'
+      preLoaderRoute: typeof AppAdminConfiguracionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/departamentos': {
+      id: '/_app/admin/departamentos'
+      path: '/admin/departamentos'
+      fullPath: '/admin/departamentos'
+      preLoaderRoute: typeof AppAdminDepartamentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/tipos': {
+      id: '/_app/admin/tipos'
+      path: '/admin/tipos'
+      fullPath: '/admin/tipos'
+      preLoaderRoute: typeof AppAdminTiposRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/usuarios': {
+      id: '/_app/admin/usuarios'
+      path: '/admin/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AppAdminUsuariosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/solicitudes/': {
+      id: '/_app/solicitudes/'
+      path: '/solicitudes'
+      fullPath: '/solicitudes/'
+      preLoaderRoute: typeof AppSolicitudesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/solicitudes/$id': {
+      id: '/_app/solicitudes/$id'
+      path: '/solicitudes/$id'
+      fullPath: '/solicitudes/$id'
+      preLoaderRoute: typeof AppSolicitudesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/solicitudes/nueva': {
+      id: '/_app/solicitudes/nueva'
+      path: '/solicitudes/nueva'
+      fullPath: '/solicitudes/nueva'
+      preLoaderRoute: typeof AppSolicitudesNuevaRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppMisSolicitudesRoute: typeof AppMisSolicitudesRoute
+  AppNotificacionesRoute: typeof AppNotificacionesRoute
+  AppPanelResponsableRoute: typeof AppPanelResponsableRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+  AppReportesRoute: typeof AppReportesRoute
+  AppAdminAuditoriaRoute: typeof AppAdminAuditoriaRoute
+  AppAdminConfiguracionRoute: typeof AppAdminConfiguracionRoute
+  AppAdminDepartamentosRoute: typeof AppAdminDepartamentosRoute
+  AppAdminTiposRoute: typeof AppAdminTiposRoute
+  AppAdminUsuariosRoute: typeof AppAdminUsuariosRoute
+  AppSolicitudesIdRoute: typeof AppSolicitudesIdRoute
+  AppSolicitudesNuevaRoute: typeof AppSolicitudesNuevaRoute
+  AppSolicitudesIndexRoute: typeof AppSolicitudesIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppMisSolicitudesRoute: AppMisSolicitudesRoute,
+  AppNotificacionesRoute: AppNotificacionesRoute,
+  AppPanelResponsableRoute: AppPanelResponsableRoute,
+  AppPerfilRoute: AppPerfilRoute,
+  AppReportesRoute: AppReportesRoute,
+  AppAdminAuditoriaRoute: AppAdminAuditoriaRoute,
+  AppAdminConfiguracionRoute: AppAdminConfiguracionRoute,
+  AppAdminDepartamentosRoute: AppAdminDepartamentosRoute,
+  AppAdminTiposRoute: AppAdminTiposRoute,
+  AppAdminUsuariosRoute: AppAdminUsuariosRoute,
+  AppSolicitudesIdRoute: AppSolicitudesIdRoute,
+  AppSolicitudesNuevaRoute: AppSolicitudesNuevaRoute,
+  AppSolicitudesIndexRoute: AppSolicitudesIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
