@@ -4,14 +4,39 @@ import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
 
-// Match routes without running loaders or rendering: loaders may need a server or
-// network the test run lacks, and jsdom never loads the stylesheets React waits on.
-describe("App routing", () => {
-  it("matches a page for / instead of falling back to not found", () => {
-    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+// Se comparan rutas sin ejecutar loaders ni renderizar (no requiere red).
+const router = () => createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+const match = (path: string) => router().matchRoutes(path).at(-1)?.routeId;
 
-    const matches = router.matchRoutes("/");
+describe("Rutas de la aplicación", () => {
+  it.each([
+    ["/", "/"],
+    ["/login", "/login"],
+    ["/reset-password", "/reset-password"],
+    ["/dashboard", "/_app/dashboard"],
+    ["/mis-solicitudes", "/_app/mis-solicitudes"],
+    ["/solicitudes", "/_app/solicitudes/"],
+    ["/solicitudes/nueva", "/_app/solicitudes/nueva"],
+    ["/solicitudes/123", "/_app/solicitudes/$id"],
+    ["/notificaciones", "/_app/notificaciones"],
+    ["/perfil", "/_app/perfil"],
+    ["/panel-responsable", "/_app/panel-responsable"],
+    ["/reportes", "/_app/reportes"],
+    ["/admin/usuarios", "/_app/admin/usuarios"],
+    ["/admin/departamentos", "/_app/admin/departamentos"],
+    ["/admin/tipos", "/_app/admin/tipos"],
+    ["/admin/auditoria", "/_app/admin/auditoria"],
+    ["/admin/configuracion", "/_app/admin/configuracion"],
+  ])("%s resuelve a %s", (path, id) => {
+    expect(match(path)).toBe(id);
+  });
 
-    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+  it("una ruta inexistente cae en la raíz (404)", () => {
+    expect(match("/no-existe")).toBe(rootRouteId);
+  });
+
+  it("las rutas privadas están bajo el layout protegido /_app", () => {
+    const ids = router().matchRoutes("/admin/usuarios").map((m) => m.routeId);
+    expect(ids).toContain("/_app");
   });
 });
