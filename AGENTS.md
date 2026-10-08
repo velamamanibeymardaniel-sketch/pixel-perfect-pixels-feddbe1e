@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Storage buckets are created/updated with the Cloud storage tools, never via SQL on storage.buckets (writes are rejected); storage.objects policies stay in migrations.
