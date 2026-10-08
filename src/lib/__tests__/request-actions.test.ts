@@ -3,7 +3,8 @@ import { availableActions, canAssign } from "../request-actions";
 import type { RequestStatus } from "../domain";
 
 const req = (status: RequestStatus) => ({ status, assignee_id: "resp", requester_id: "emp" });
-const labels = (status: RequestStatus, uid: string, admin = false, close = true) => availableActions(req(status), uid, admin, close).map((a) => a.label);
+const labels = (status: RequestStatus, uid: string, admin = false, close = true) =>
+  availableActions(req(status), uid, admin, close).map((a) => a.label);
 
 describe("flujo de estados", () => {
   it("el solicitante solo puede cancelar mientras está pendiente o asignada", () => {
@@ -47,7 +48,9 @@ describe("flujo de estados", () => {
     expect(canAssign({ status: "cancelada" }, true)).toBe(false);
   });
   it("reabrir pide un motivo y resolver exige descripción", () => {
-    const reabrir = availableActions(req("resuelta"), "emp", false, true).find((a) => a.label === "Reabrir");
+    const reabrir = availableActions(req("resuelta"), "emp", false, true).find(
+      (a) => a.label === "Reabrir",
+    );
     expect(reabrir?.needsComment).toBe(true);
     expect(availableActions(req("en_proceso"), "resp", false, true)[0]?.label).toBe("Resolver");
   });

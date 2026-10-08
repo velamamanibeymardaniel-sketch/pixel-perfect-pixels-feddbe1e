@@ -1,7 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import type { Department, Profile, RequestRow, RequestType, RequestStatus, RequestPriority } from "@/lib/domain";
+import type {
+  Department,
+  Profile,
+  RequestRow,
+  RequestType,
+  RequestStatus,
+  RequestPriority,
+} from "@/lib/domain";
 
 export type RequestListItem = RequestRow & {
   department: { name: string } | null;
@@ -50,11 +57,19 @@ export function useAssignees() {
     queryKey: ["assignees"],
     enabled: !!userId,
     queryFn: async (): Promise<Pick<Profile, "id" | "full_name">[]> => {
-      const { data: roles, error: e1 } = await supabase.from("user_roles").select("user_id").in("role", ["responsable", "admin"]);
+      const { data: roles, error: e1 } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .in("role", ["responsable", "admin"]);
       if (e1) throw e1;
       const ids = [...new Set((roles ?? []).map((r) => r.user_id))];
       if (!ids.length) return [];
-      const { data, error } = await supabase.from("profiles").select("id, full_name").in("id", ids).eq("is_active", true).order("full_name");
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", ids)
+        .eq("is_active", true)
+        .order("full_name");
       if (error) throw error;
       return data ?? [];
     },
@@ -94,7 +109,16 @@ export function useDashboardStats(from?: string | null, to?: string | null) {
   });
 }
 
-export function useRequestList(opts: { key: string; assigneeId?: string; requesterId?: string; limit?: number; openOnly?: boolean; dueBefore?: string; dueAfter?: string; order?: { column: string; ascending: boolean } }) {
+export function useRequestList(opts: {
+  key: string;
+  assigneeId?: string;
+  requesterId?: string;
+  limit?: number;
+  openOnly?: boolean;
+  dueBefore?: string;
+  dueAfter?: string;
+  order?: { column: string; ascending: boolean };
+}) {
   const { userId } = useAuth();
   return useQuery({
     queryKey: ["requests-mini", opts, userId],

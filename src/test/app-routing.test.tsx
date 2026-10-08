@@ -36,7 +36,9 @@ describe("Rutas de la aplicación", () => {
   });
 
   it("las rutas privadas están bajo el layout protegido /_app", () => {
-    const ids = router().matchRoutes("/admin/usuarios").map((m) => m.routeId);
+    const ids = router()
+      .matchRoutes("/admin/usuarios")
+      .map((m) => m.routeId);
     expect(ids).toContain("/_app");
   });
 });

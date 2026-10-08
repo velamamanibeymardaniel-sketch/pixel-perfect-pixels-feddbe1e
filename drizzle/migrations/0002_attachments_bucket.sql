@@ -1,4 +1,3 @@
--- Bucket privado para adjuntos (las políticas de storage.objects ya existen en 0000)
-INSERT INTO storage.buckets (id, name, public, file_size_limit)
-VALUES ('attachments', 'attachments', false, 20971520)
-ON CONFLICT (id) DO NOTHING;
+-- El bucket privado "attachments" (20 MB) se crea con la herramienta de Storage de Lovable Cloud,
+-- no mediante SQL. Las políticas de storage.objects están en 0000 y 0003.
+SELECT 1;

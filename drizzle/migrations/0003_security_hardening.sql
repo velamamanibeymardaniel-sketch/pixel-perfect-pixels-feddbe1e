@@ -39,19 +39,20 @@ WITH CHECK (
 );
 
 -- 3) Bucket de adjuntos: límite de 20 MB y lista blanca de tipos MIME.
-UPDATE storage.buckets
-SET public = false,
-    file_size_limit = 20971520,
-    allowed_mime_types = ARRAY[
-      'application/pdf','application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-powerpoint',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      'text/plain','text/csv','image/png','image/jpeg','image/gif','image/webp',
-      'application/zip','application/x-zip-compressed']
-WHERE id = 'attachments';
+-- Aplicado mediante la herramienta de Storage (no se permiten escrituras SQL en storage.buckets):
+-- UPDATE storage.buckets
+-- SET public = false,
+--     file_size_limit = 20971520,
+--     allowed_mime_types = ARRAY[
+--       'application/pdf','application/msword',
+--       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+--       'application/vnd.ms-excel',
+--       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+--       'application/vnd.ms-powerpoint',
+--       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+--       'text/plain','text/csv','image/png','image/jpeg','image/gif','image/webp',
+--       'application/zip','application/x-zip-compressed']
+-- WHERE id = 'attachments';
 
 -- 4) Fecha límite: solo sobre solicitudes abiertas y siempre en el futuro.
 CREATE OR REPLACE FUNCTION public.update_request_due(_request_id uuid, _due_at timestamptz)

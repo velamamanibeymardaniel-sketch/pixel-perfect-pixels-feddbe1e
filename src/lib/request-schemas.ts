@@ -4,16 +4,40 @@ export const MAX_FILE_BYTES = 20 * 1024 * 1024;
 export const MAX_FILES = 5;
 
 export const newRequestSchema = z.object({
-  title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres").max(200, "Máximo 200 caracteres"),
+  title: z
+    .string()
+    .trim()
+    .min(3, "El título debe tener al menos 3 caracteres")
+    .max(200, "Máximo 200 caracteres"),
   request_type_id: z.string().uuid("Seleccione un tipo de solicitud"),
   department_id: z.string().uuid("Seleccione un departamento"),
   priority: z.enum(["baja", "media", "alta", "critica"]),
-  description: z.string().trim().min(5, "La descripción es demasiado corta").max(5000, "Máximo 5000 caracteres"),
+  description: z
+    .string()
+    .trim()
+    .min(5, "La descripción es demasiado corta")
+    .max(5000, "Máximo 5000 caracteres"),
 });
 export type NewRequestInput = z.infer<typeof newRequestSchema>;
 
 /** Extensiones permitidas para adjuntos (documentos, hojas de cálculo, imágenes y texto). */
-export const ALLOWED_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv", "png", "jpg", "jpeg", "gif", "webp", "zip"] as const;
+export const ALLOWED_EXTENSIONS = [
+  "pdf",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "txt",
+  "csv",
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "webp",
+  "zip",
+] as const;
 
 /** Tipos MIME permitidos; deben coincidir con `allowed_mime_types` del bucket (migración 0003). */
 export const ALLOWED_MIME_TYPES = [
@@ -65,5 +89,9 @@ export function validateFiles(files: File[]): string | null {
 }
 
 export function safeFileName(name: string): string {
-  return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "_").slice(-120);
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9._-]+/g, "_")
+    .slice(-120);
 }

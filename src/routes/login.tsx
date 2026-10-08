@@ -18,7 +18,10 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{
+    email?: string | undefined;
+    password?: string | undefined;
+  }>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<"login" | "recover">("login");
@@ -71,7 +74,9 @@ function LoginPage() {
       setFormError("No se pudo enviar el correo de recuperación. Intente más tarde");
       return;
     }
-    toast.success("Si el correo está registrado, recibirá un enlace para restablecer su contraseña");
+    toast.success(
+      "Si el correo está registrado, recibirá un enlace para restablecer su contraseña",
+    );
     setMode("login");
   }
 
@@ -82,12 +87,17 @@ function LoginPage() {
           <ClipboardList className="size-7" /> Gestión de Solicitudes
         </div>
         <div className="max-w-md space-y-4">
-          <h1 className="text-4xl font-semibold leading-tight">Cada solicitud, con seguimiento hasta su cierre.</h1>
+          <h1 className="text-4xl font-semibold leading-tight">
+            Cada solicitud, con seguimiento hasta su cierre.
+          </h1>
           <p className="text-primary-foreground/80">
-            Registre, asigne y resuelva solicitudes internas con trazabilidad, plazos y notificaciones.
+            Registre, asigne y resuelva solicitudes internas con trazabilidad, plazos y
+            notificaciones.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/70">Plataforma institucional de gestión interna</p>
+        <p className="text-sm text-primary-foreground/70">
+          Plataforma institucional de gestión interna
+        </p>
       </div>
       <div className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm space-y-6">
@@ -95,7 +105,9 @@ function LoginPage() {
             <div className="mb-2 flex items-center justify-center gap-2 font-semibold text-primary lg:hidden">
               <ClipboardList className="size-6" /> Gestión de Solicitudes
             </div>
-            <h2 className="text-2xl font-semibold">{mode === "login" ? "Iniciar sesión" : "Recuperar contraseña"}</h2>
+            <h2 className="text-2xl font-semibold">
+              {mode === "login" ? "Iniciar sesión" : "Recuperar contraseña"}
+            </h2>
             <p className="text-sm text-muted-foreground">
               {mode === "login"
                 ? "Ingrese con su cuenta institucional."
@@ -104,25 +116,50 @@ function LoginPage() {
           </div>
           <form onSubmit={mode === "login" ? onLogin : onRecover} className="space-y-4" noValidate>
             {formError && (
-              <div role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <div
+                role="alert"
+                className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+              >
                 {formError}
               </div>
             )}
             <div className="space-y-2">
               <Label htmlFor="email">Correo electrónico</Label>
-              <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={busy} aria-invalid={!!errors.email} />
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={busy}
+                aria-invalid={!!errors.email}
+              />
               {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
             {mode === "login" && (
               <div className="space-y-2">
                 <Label htmlFor="password">Contraseña</Label>
-                <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} aria-invalid={!!errors.password} />
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={busy}
+                  aria-invalid={!!errors.password}
+                />
                 {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
               </div>
             )}
             <Button type="submit" className="w-full" disabled={busy}>
               {busy && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {mode === "login" ? (busy ? "Ingresando…" : "Iniciar sesión") : busy ? "Enviando…" : "Enviar enlace"}
+              {mode === "login"
+                ? busy
+                  ? "Ingresando…"
+                  : "Iniciar sesión"
+                : busy
+                  ? "Enviando…"
+                  : "Enviar enlace"}
             </Button>
           </form>
           <button

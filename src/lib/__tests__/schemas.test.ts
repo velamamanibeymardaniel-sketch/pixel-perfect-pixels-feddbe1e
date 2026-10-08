@@ -1,9 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { loginSchema, translateAuthError } from "../auth-schemas";
-import { MAX_FILE_BYTES, newRequestSchema, safeFileName, validateFile, validateFiles } from "../request-schemas";
+import {
+  MAX_FILE_BYTES,
+  newRequestSchema,
+  safeFileName,
+  validateFile,
+  validateFiles,
+} from "../request-schemas";
 import { csvSafe, toCsv } from "../export";
 
-const valid = { title: "Falla de impresora", request_type_id: "00000000-0000-0000-0002-000000000001", department_id: "00000000-0000-0000-0001-000000000001", priority: "media", description: "No imprime desde ayer" };
+const valid = {
+  title: "Falla de impresora",
+  request_type_id: "00000000-0000-0000-0002-000000000001",
+  department_id: "00000000-0000-0000-0001-000000000001",
+  priority: "media",
+  description: "No imprime desde ayer",
+};
 
 describe("validación de formularios", () => {
   it("login exige correo válido y contraseña", () => {
@@ -28,7 +40,9 @@ describe("validación de formularios", () => {
     const big = new File([new Uint8Array(1)], "grande.pdf");
     Object.defineProperty(big, "size", { value: MAX_FILE_BYTES + 1 });
     expect(validateFiles([big])).toMatch(/20 MB/);
-    expect(validateFiles(Array.from({ length: 6 }, (_, i) => new File(["x"], `f${i}.txt`)))).toMatch(/Máximo/);
+    expect(
+      validateFiles(Array.from({ length: 6 }, (_, i) => new File(["x"], `f${i}.txt`))),
+    ).toMatch(/Máximo/);
     expect(validateFiles([new File(["x"], "ok.txt")])).toBeNull();
   });
   it("normaliza nombres de archivo", () => {
@@ -47,15 +61,25 @@ describe("validación de formularios", () => {
   });
   it("archivos: rechaza vacíos, ejecutables y formatos no permitidos", () => {
     expect(validateFile({ name: "vacio.pdf", size: 0, type: "application/pdf" })).toMatch(/vacío/);
-    expect(validateFile({ name: "virus.exe", size: 100, type: "application/x-msdownload" })).toMatch(/no es un tipo de archivo permitido/);
+    expect(
+      validateFile({ name: "virus.exe", size: 100, type: "application/x-msdownload" }),
+    ).toMatch(/no es un tipo de archivo permitido/);
     expect(validateFile({ name: "script.sh", size: 100, type: "" })).toMatch(/no es un tipo/);
-    expect(validateFile({ name: "falso.pdf", size: 100, type: "application/x-msdownload" })).toMatch(/formato no permitido/);
+    expect(
+      validateFile({ name: "falso.pdf", size: 100, type: "application/x-msdownload" }),
+    ).toMatch(/formato no permitido/);
     expect(validateFile({ name: "sin-extension", size: 100, type: "" })).toMatch(/no es un tipo/);
   });
   it("archivos: acepta formatos permitidos sin distinguir mayúsculas", () => {
     expect(validateFile({ name: "Informe.PDF", size: 1024, type: "application/pdf" })).toBeNull();
     expect(validateFile({ name: "foto.JPG", size: 1024, type: "image/jpeg" })).toBeNull();
-    expect(validateFile({ name: "datos.xlsx", size: 1024, type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })).toBeNull();
+    expect(
+      validateFile({
+        name: "datos.xlsx",
+        size: 1024,
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+    ).toBeNull();
     expect(validateFile({ name: "nota.txt", size: 1, type: "" })).toBeNull();
   });
   it("traduce más errores de autenticación", () => {

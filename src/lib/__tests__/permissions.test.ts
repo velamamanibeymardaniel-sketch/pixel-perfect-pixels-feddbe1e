@@ -18,7 +18,15 @@ describe("permisos de navegación", () => {
   });
   it("el administrador ve todo", () => {
     const rutas = navForRole("admin").map((i) => i.to);
-    for (const r of ["/admin/usuarios", "/admin/departamentos", "/admin/tipos", "/admin/auditoria", "/admin/configuracion", "/reportes"]) expect(rutas).toContain(r);
+    for (const r of [
+      "/admin/usuarios",
+      "/admin/departamentos",
+      "/admin/tipos",
+      "/admin/auditoria",
+      "/admin/configuracion",
+      "/reportes",
+    ])
+      expect(rutas).toContain(r);
   });
   it("bloquea el acceso directo por URL", () => {
     expect(canAccessPath("empleado", "/admin/usuarios")).toBe(false);
