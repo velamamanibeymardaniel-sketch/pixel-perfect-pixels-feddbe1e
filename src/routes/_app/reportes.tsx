@@ -27,32 +27,121 @@ function ReportsPage() {
       <PageHeader
         title="Reportes"
         description="Indicadores calculados con los datos reales del sistema."
-        actions={<>
-          <Button variant="outline" disabled={!s} onClick={() => exportPdf(sections, "Reporte de solicitudes", name).catch(() => toast.error("No se pudo generar el PDF"))}><FileText className="mr-2 size-4" />PDF</Button>
-          <Button variant="outline" disabled={!s} onClick={() => exportExcel(sections, name)}><FileSpreadsheet className="mr-2 size-4" />Excel</Button>
-          <Button variant="outline" disabled={!s} onClick={() => exportCsv({ title: "Resumen", head: ["Sección", "Concepto", "Valor"], rows: sections.flatMap((x) => x.rows.map((r) => [x.title, String(r[0]), r.slice(1).join(" / ")])) }, name)}><FileDown className="mr-2 size-4" />CSV</Button>
-        </>}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              disabled={!s}
+              onClick={() =>
+                exportPdf(sections, "Reporte de solicitudes", name).catch(() =>
+                  toast.error("No se pudo generar el PDF"),
+                )
+              }
+            >
+              <FileText className="mr-2 size-4" />
+              PDF
+            </Button>
+            <Button variant="outline" disabled={!s} onClick={() => exportExcel(sections, name)}>
+              <FileSpreadsheet className="mr-2 size-4" />
+              Excel
+            </Button>
+            <Button
+              variant="outline"
+              disabled={!s}
+              onClick={() =>
+                exportCsv(
+                  {
+                    title: "Resumen",
+                    head: ["Sección", "Concepto", "Valor"],
+                    rows: sections.flatMap((x) =>
+                      x.rows.map((r) => [x.title, String(r[0]), r.slice(1).join(" / ")]),
+                    ),
+                  },
+                  name,
+                )
+              }
+            >
+              <FileDown className="mr-2 size-4" />
+              CSV
+            </Button>
+          </>
+        }
       />
       <div className="mb-6 flex flex-wrap items-center gap-3 text-sm">
         <span className="text-muted-foreground">Periodo de creación:</span>
-        <Input type="date" className="w-44" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="Desde" />
-        <Input type="date" className="w-44" value={to} onChange={(e) => setTo(e.target.value)} aria-label="Hasta" />
-        {(from || to) && <Button variant="ghost" size="sm" onClick={() => { setFrom(""); setTo(""); }}>Limpiar</Button>}
+        <Input
+          type="date"
+          className="w-44"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          aria-label="Desde"
+        />
+        <Input
+          type="date"
+          className="w-44"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          aria-label="Hasta"
+        />
+        {(from || to) && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setFrom("");
+              setTo("");
+            }}
+          >
+            Limpiar
+          </Button>
+        )}
       </div>
-      {stats.isLoading ? <TableSkeleton /> : stats.isError ? <ErrorState error={stats.error} onRetry={() => stats.refetch()} /> : s && (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {sections.map((sec) => (
-            <Card key={sec.title}>
-              <CardHeader><CardTitle className="text-base">{sec.title}</CardTitle></CardHeader>
-              <CardContent>
-                {sec.rows.length === 0 ? <p className="text-sm text-muted-foreground">Sin datos en el periodo.</p> : (
-                  <div className="overflow-x-auto"><table className="w-full text-sm"><thead className="text-left text-xs uppercase text-muted-foreground"><tr>{sec.head.map((h) => <th key={h} className="pb-2 pr-3">{h}</th>)}</tr></thead>
-                    <tbody>{sec.rows.map((r, i) => <tr key={i} className="border-t">{r.map((c, j) => <td key={j} className="py-1.5 pr-3">{c}</td>)}</tr>)}</tbody></table></div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      {stats.isLoading ? (
+        <TableSkeleton />
+      ) : stats.isError ? (
+        <ErrorState error={stats.error} onRetry={() => stats.refetch()} />
+      ) : (
+        s && (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {sections.map((sec) => (
+              <Card key={sec.title}>
+                <CardHeader>
+                  <CardTitle className="text-base">{sec.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {sec.rows.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Sin datos en el periodo.</p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead className="text-left text-xs uppercase text-muted-foreground">
+                          <tr>
+                            {sec.head.map((h) => (
+                              <th key={h} className="pb-2 pr-3">
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sec.rows.map((r, i) => (
+                            <tr key={i} className="border-t">
+                              {r.map((c, j) => (
+                                <td key={j} className="py-1.5 pr-3">
+                                  {c}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )
       )}
     </div>
   );

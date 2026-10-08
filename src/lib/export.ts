@@ -42,7 +42,13 @@ export async function exportPdf(sections: ReportSection[], title: string, filena
   doc.text(title, 14, 16);
   let y = 24;
   for (const s of sections) {
-    autoTable(doc, { startY: y, head: [[{ content: s.title, colSpan: s.head.length }], s.head], body: s.rows.map((r) => r.map(String)), theme: "striped", styles: { fontSize: 9 } });
+    autoTable(doc, {
+      startY: y,
+      head: [[{ content: s.title, colSpan: s.head.length }], s.head],
+      body: s.rows.map((r) => r.map(String)),
+      theme: "striped",
+      styles: { fontSize: 9 },
+    });
     y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8;
   }
   doc.save(`${filename}.pdf`);

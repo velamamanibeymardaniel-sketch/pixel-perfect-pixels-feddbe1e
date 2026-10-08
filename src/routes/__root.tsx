@@ -81,7 +81,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: APP_NAME },
       {
         name: "description",
-        content: "Plataforma para gestionar solicitudes internas: seguimiento, notificaciones, reportes y auditoría.",
+        content:
+          "Plataforma para gestionar solicitudes internas: seguimiento, notificaciones, reportes y auditoría.",
       },
       { property: "og:title", content: APP_NAME },
       { property: "og:type", content: "website" },

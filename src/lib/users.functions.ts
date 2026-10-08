@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const roleEnum = z.enum(["admin", "responsable", "empleado"]);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Ctx = { supabase: any; userId: string };
 
 async function requireAdmin(ctx: Ctx) {
@@ -21,7 +22,15 @@ async function requireAdmin(ctx: Ctx) {
   return me.organization_id as string;
 }
 
-async function audit(admin: any, org: string, actor: string, action: string, entityId: string, details: object) {
+async function audit(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  org: string,
+  actor: string,
+  action: string,
+  entityId: string,
+  details: object,
+) {
   await admin.from("audit_logs").insert({
     organization_id: org,
     actor_id: actor,
@@ -64,8 +73,10 @@ export const createUser = createServerFn({ method: "POST" })
     });
     if (error || !created.user) {
       const msg = error?.message ?? "";
-      if (/already|registered|exists/i.test(msg)) throw new Error("Ya existe un usuario con ese correo");
-      if (/weak|pwned|password/i.test(msg)) throw new Error("La contraseña es demasiado débil o conocida");
+      if (/already|registered|exists/i.test(msg))
+        throw new Error("Ya existe un usuario con ese correo");
+      if (/weak|pwned|password/i.test(msg))
+        throw new Error("La contraseña es demasiado débil o conocida");
       console.error("[createUser]", msg);
       throw new Error("No se pudo crear el usuario. Inténtelo nuevamente");
     }
@@ -83,7 +94,10 @@ export const createUser = createServerFn({ method: "POST" })
       throw new Error("No se pudo asignar el rol al usuario. Inténtelo nuevamente");
     }
     await supabaseAdmin.from("user_roles").delete().eq("user_id", id).neq("role", data.role);
-    const { error: profErr } = await supabaseAdmin.from("profiles").update({ phone: data.phone }).eq("id", id);
+    const { error: profErr } = await supabaseAdmin
+      .from("profiles")
+      .update({ phone: data.phone })
+      .eq("id", id);
     if (profErr) console.error("[createUser:profile]", profErr.message);
     await audit(supabaseAdmin, org, context.userId, "creacion", id, {
       email: data.email,
@@ -140,8 +154,17 @@ export const updateUser = createServerFn({ method: "POST" })
       console.error("[updateUser:role]", roleErr.message);
       throw new Error("No se pudo actualizar el rol del usuario");
     }
-    const { error: delErr } = await supabaseAdmin.from("user_roles").delete().eq("user_id", data.id).neq("role", data.role);
-    if (delErr) throw new Error(/administrador/i.test(delErr.message) ? delErr.message : "No se pudo actualizar el rol del usuario");
+    const { error: delErr } = await supabaseAdmin
+      .from("user_roles")
+      .delete()
+      .eq("user_id", data.id)
+      .neq("role", data.role);
+    if (delErr)
+      throw new Error(
+        /administrador/i.test(delErr.message)
+          ? delErr.message
+          : "No se pudo actualizar el rol del usuario",
+      );
     await supabaseAdmin.auth.admin.updateUserById(data.id, {
       ban_duration: data.is_active ? "none" : "876000h",
     });
@@ -170,7 +193,8 @@ export const setUserPassword = createServerFn({ method: "POST" })
       password: data.password,
     });
     if (error) {
-      if (/weak|pwned/i.test(error.message)) throw new Error("La contraseña es demasiado débil o conocida");
+      if (/weak|pwned/i.test(error.message))
+        throw new Error("La contraseña es demasiado débil o conocida");
       console.error("[setUserPassword]", error.message);
       throw new Error("No se pudo cambiar la contraseña. Inténtelo nuevamente");
     }

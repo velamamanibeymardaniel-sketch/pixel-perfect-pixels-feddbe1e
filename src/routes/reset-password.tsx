@@ -17,7 +17,10 @@ const schema = z
     password: z.string().min(8, "Mínimo 8 caracteres").max(72, "Máximo 72 caracteres"),
     confirm: z.string(),
   })
-  .refine((v) => v.password === v.confirm, { path: ["confirm"], message: "Las contraseñas no coinciden" });
+  .refine((v) => v.password === v.confirm, {
+    path: ["confirm"],
+    message: "Las contraseñas no coinciden",
+  });
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -57,8 +60,13 @@ function ResetPasswordPage() {
       <div className="flex min-h-screen items-center justify-center px-6">
         <div className="w-full max-w-sm space-y-4 text-center">
           <h1 className="text-2xl font-semibold">Enlace no válido</h1>
-          <p className="text-sm text-muted-foreground">El enlace de recuperación expiró o ya fue utilizado. Solicite uno nuevo desde la pantalla de inicio de sesión.</p>
-          <Button className="w-full" onClick={() => navigate({ to: "/login", replace: true })}>Ir al inicio de sesión</Button>
+          <p className="text-sm text-muted-foreground">
+            El enlace de recuperación expiró o ya fue utilizado. Solicite uno nuevo desde la
+            pantalla de inicio de sesión.
+          </p>
+          <Button className="w-full" onClick={() => navigate({ to: "/login", replace: true })}>
+            Ir al inicio de sesión
+          </Button>
         </div>
       </div>
     );
@@ -67,14 +75,33 @@ function ResetPasswordPage() {
     <div className="flex min-h-screen items-center justify-center px-6">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4" noValidate>
         <h1 className="text-2xl font-semibold">Nueva contraseña</h1>
-        {error && <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>}
+        {error && (
+          <p
+            role="alert"
+            className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        )}
         <div className="space-y-2">
           <Label htmlFor="p1">Nueva contraseña</Label>
-          <Input id="p1" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+          <Input
+            id="p1"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="p2">Confirmar contraseña</Label>
-          <Input id="p2" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
+          <Input
+            id="p2"
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            autoComplete="new-password"
+          />
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy && <Loader2 className="mr-2 size-4 animate-spin" />} Guardar contraseña

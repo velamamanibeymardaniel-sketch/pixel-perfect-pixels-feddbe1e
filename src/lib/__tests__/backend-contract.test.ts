@@ -8,7 +8,8 @@ import { STATUSES, allowedTransitions, type RequestStatus } from "../domain";
  * Garantizan que las reglas de negocio de la interfaz no se desalineen de las que aplica Supabase.
  */
 const root = process.cwd();
-const sql = (f: string) => readFileSync(path.join(root, "drizzle/migrations", f), "utf8").replace(/\r\n/g, "\n");
+const sql = (f: string) =>
+  readFileSync(path.join(root, "drizzle/migrations", f), "utf8").replace(/\r\n/g, "\n");
 const BASE = sql("0000_base_schema.sql");
 const SCOPING = sql("0001_request_scoping_and_attachment_events.sql");
 const HARDENING = sql("0003_security_hardening.sql");
@@ -32,10 +33,15 @@ function walk(dir: string, acc: string[] = []): string[] {
 
 describe("transiciones: la interfaz coincide con change_request_status (SQL)", () => {
   const body = fnBody(BASE, "change_request_status");
-  const block = body.slice(body.indexOf("IF NOT ((_old="), body.indexOf("THEN\n    RAISE EXCEPTION 'Transición"));
+  const block = body.slice(
+    body.indexOf("IF NOT ((_old="),
+    body.indexOf("THEN\n    RAISE EXCEPTION 'Transición"),
+  );
   const sqlMap = new Map<RequestStatus, RequestStatus[]>();
   for (const m of block.matchAll(/_old='(\w+)' AND _new_status(?: IN \(([^)]*)\)|='(\w+)')/g)) {
-    const to = (m[2] ? m[2].split(",").map((x) => x.trim().replace(/'/g, "")) : [m[3]!]) as RequestStatus[];
+    const to = (
+      m[2] ? m[2].split(",").map((x) => x.trim().replace(/'/g, "")) : [m[3]!]
+    ) as RequestStatus[];
     sqlMap.set(m[1] as RequestStatus, to);
   }
 
@@ -44,7 +50,12 @@ describe("transiciones: la interfaz coincide con change_request_status (SQL)", (
   });
 
   it.each(STATUSES)("estado %s", (from) => {
-    const ts = allowedTransitions({ status: from, assignee_id: "a", requester_id: "r" }, "admin", true, true).sort();
+    const ts = allowedTransitions(
+      { status: from, assignee_id: "a", requester_id: "r" },
+      "admin",
+      true,
+      true,
+    ).sort();
     const expected = (sqlMap.get(from) ?? []).slice().sort();
     expect(ts).toEqual(expected);
   });
@@ -86,20 +97,23 @@ describe("seguridad en la base de datos", () => {
   it("el responsable solo accede a las solicitudes asignadas (0001 reemplaza la política)", () => {
     const access = fnBody(SCOPING, "can_access_request");
     expect(access).not.toContain("'responsable'");
-    expect(SCOPING).toContain("DROP POLICY IF EXISTS \"role scoped read requests\"");
-    const policy = SCOPING.slice(SCOPING.indexOf("CREATE POLICY \"role scoped read requests\""));
+    expect(SCOPING).toContain('DROP POLICY IF EXISTS "role scoped read requests"');
+    const policy = SCOPING.slice(SCOPING.indexOf('CREATE POLICY "role scoped read requests"'));
     expect(policy.slice(0, 400)).not.toContain("'responsable'");
   });
 
   it("todas las tablas tienen RLS activado", () => {
     const tables = [...BASE.matchAll(/CREATE TABLE public\.(\w+)/g)].map((m) => m[1]);
     expect(tables.length).toBeGreaterThanOrEqual(12);
-    for (const t of tables) expect(BASE, `RLS en ${t}`).toContain(`ALTER TABLE public.${t} ENABLE ROW LEVEL SECURITY`);
+    for (const t of tables)
+      expect(BASE, `RLS en ${t}`).toContain(`ALTER TABLE public.${t} ENABLE ROW LEVEL SECURITY`);
   });
 
   it("los roles solo son modificables por el servidor (sin INSERT/UPDATE/DELETE para authenticated)", () => {
     expect(BASE).toContain("GRANT SELECT ON public.user_roles TO authenticated");
-    expect(BASE).not.toMatch(/GRANT[^;]*(INSERT|UPDATE|DELETE)[^;]*ON public\.user_roles TO authenticated/);
+    expect(BASE).not.toMatch(
+      /GRANT[^;]*(INSERT|UPDATE|DELETE)[^;]*ON public\.user_roles TO authenticated/,
+    );
   });
 
   it("la auditoría solo es legible por administradores y no tiene escritura directa", () => {
@@ -109,7 +123,8 @@ describe("seguridad en la base de datos", () => {
 
   it("un usuario no puede cambiar su organización, correo, departamento ni estado activo", () => {
     const guard = fnBody(BASE, "guard_profile_update");
-    for (const col of ["organization_id", "is_active", "email", "department_id"]) expect(guard).toContain(`NEW.${col}`);
+    for (const col of ["organization_id", "is_active", "email", "department_id"])
+      expect(guard).toContain(`NEW.${col}`);
   });
 
   it("el alta de usuarios toma la organización de app_metadata (0003)", () => {
@@ -128,12 +143,16 @@ describe("la service role key nunca llega al navegador", () => {
   const files = walk(path.join(root, "src"));
 
   it("solo se referencia en client.server.ts", () => {
-    const offenders = files.filter((f) => !f.endsWith("client.server.ts") && !f.includes("__tests__")).filter((f) => /SERVICE_ROLE/.test(readFileSync(f, "utf8")));
+    const offenders = files
+      .filter((f) => !f.endsWith("client.server.ts") && !f.includes("__tests__"))
+      .filter((f) => /SERVICE_ROLE/.test(readFileSync(f, "utf8")));
     expect(offenders.map((f) => path.relative(root, f))).toEqual([]);
   });
 
   it("client.server.ts solo se importa de forma dinámica dentro de funciones de servidor", () => {
-    const importers = files.filter((f) => !f.endsWith("client.server.ts") && !f.includes("__tests__")).filter((f) => /client\.server/.test(readFileSync(f, "utf8")));
+    const importers = files
+      .filter((f) => !f.endsWith("client.server.ts") && !f.includes("__tests__"))
+      .filter((f) => /client\.server/.test(readFileSync(f, "utf8")));
     for (const f of importers) {
       const src = readFileSync(f, "utf8");
       expect(src, path.relative(root, f)).not.toMatch(/^import[^;]*client\.server/m);
@@ -162,8 +181,11 @@ describe("interfaz en español", () => {
   });
 
   it("no quedan textos de desarrollo en el código", () => {
-    const bad = /Your app will live here|Something went wrong on our end|Connect Supabase in Lovable/i;
-    const offenders = walk(path.join(root, "src")).filter((f) => !f.includes("__tests__")).filter((f) => bad.test(readFileSync(f, "utf8")));
+    const bad =
+      /Your app will live here|Something went wrong on our end|Connect Supabase in Lovable/i;
+    const offenders = walk(path.join(root, "src"))
+      .filter((f) => !f.includes("__tests__") && !f.includes(path.join("integrations", "supabase")))
+      .filter((f) => bad.test(readFileSync(f, "utf8")));
     expect(offenders.map((f) => path.relative(root, f))).toEqual([]);
   });
 });

@@ -1,8 +1,23 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  BarChart3, Bell, Building2, ClipboardList, FileText, Inbox, LayoutDashboard, LogOut, Menu,
-  PlusCircle, Settings, Shield, Tags, User, UserCheck, Users, X,
+  BarChart3,
+  Bell,
+  Building2,
+  ClipboardList,
+  FileText,
+  Inbox,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  PlusCircle,
+  Settings,
+  Shield,
+  Tags,
+  User,
+  UserCheck,
+  Users,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,9 +30,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/states";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  "layout-dashboard": LayoutDashboard, inbox: Inbox, "file-text": FileText, "plus-circle": PlusCircle,
-  "user-check": UserCheck, bell: Bell, user: User, users: Users, building: Building2, tags: Tags,
-  settings: Settings, "bar-chart": BarChart3, shield: Shield,
+  "layout-dashboard": LayoutDashboard,
+  inbox: Inbox,
+  "file-text": FileText,
+  "plus-circle": PlusCircle,
+  "user-check": UserCheck,
+  bell: Bell,
+  user: User,
+  users: Users,
+  building: Building2,
+  tags: Tags,
+  settings: Settings,
+  "bar-chart": BarChart3,
+  shield: Shield,
 };
 
 export function AppShell() {
@@ -49,11 +74,17 @@ export function AppShell() {
         <div className="max-w-md space-y-4 text-center">
           <h1 className="text-xl font-semibold">No se pudo cargar su cuenta</h1>
           <p className="text-sm text-muted-foreground">
-            Hubo un problema de conexión al obtener sus datos. Revise su conexión e inténtelo nuevamente.
+            Hubo un problema de conexión al obtener sus datos. Revise su conexión e inténtelo
+            nuevamente.
           </p>
           <div className="flex justify-center gap-2">
             <Button onClick={() => refresh()}>Reintentar</Button>
-            <Button variant="outline" onClick={() => signOut().then(() => navigate({ to: "/login" }))}>Cerrar sesión</Button>
+            <Button
+              variant="outline"
+              onClick={() => signOut().then(() => navigate({ to: "/login" }))}
+            >
+              Cerrar sesión
+            </Button>
           </div>
         </div>
       </div>
@@ -67,7 +98,9 @@ export function AppShell() {
           <p className="text-sm text-muted-foreground">
             Su cuenta está desactivada o no tiene un perfil asociado. Contacte al administrador.
           </p>
-          <Button onClick={() => signOut().then(() => navigate({ to: "/login" }))}>Cerrar sesión</Button>
+          <Button onClick={() => signOut().then(() => navigate({ to: "/login" }))}>
+            Cerrar sesión
+          </Button>
         </div>
       </div>
     );
@@ -79,21 +112,32 @@ export function AppShell() {
       .filter((i) => i.group === group)
       .map((i) => {
         const Icon = ICONS[i.icon] ?? FileText;
-        const active = path === i.to || (i.to !== "/solicitudes" && i.to !== "/solicitudes/nueva" && path.startsWith(i.to + "/")) ||
-          (i.to === "/solicitudes" && path.startsWith("/solicitudes/") && path !== "/solicitudes/nueva" && role !== "empleado");
+        const active =
+          path === i.to ||
+          (i.to !== "/solicitudes" &&
+            i.to !== "/solicitudes/nueva" &&
+            path.startsWith(i.to + "/")) ||
+          (i.to === "/solicitudes" &&
+            path.startsWith("/solicitudes/") &&
+            path !== "/solicitudes/nueva" &&
+            role !== "empleado");
         return (
           <Link
             key={i.to}
             to={i.to as "/dashboard"}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-              active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60",
+              active
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60",
             )}
           >
             <Icon className="size-4" />
             <span className="flex-1">{i.label}</span>
             {i.to === "/notificaciones" && unread > 0 && (
-              <span className="rounded-full bg-sidebar-primary px-2 text-xs font-semibold text-sidebar-primary-foreground">{unread > 99 ? "99+" : unread}</span>
+              <span className="rounded-full bg-sidebar-primary px-2 text-xs font-semibold text-sidebar-primary-foreground">
+                {unread > 99 ? "99+" : unread}
+              </span>
             )}
           </Link>
         );
@@ -111,13 +155,17 @@ export function AppShell() {
         {render("principal")}
         {adminItems && (
           <>
-            <p className="px-3 pt-5 pb-1 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">Administración</p>
+            <p className="px-3 pt-5 pb-1 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+              Administración
+            </p>
             {render("admin")}
           </>
         )}
       </nav>
       <div className="border-t border-sidebar-border p-4">
-        <p className="truncate text-sm font-medium text-sidebar-accent-foreground">{profile.full_name}</p>
+        <p className="truncate text-sm font-medium text-sidebar-accent-foreground">
+          {profile.full_name}
+        </p>
         <p className="mb-3 text-xs text-sidebar-foreground/70">{ROLE_LABEL[role]}</p>
         <Button
           variant="ghost"
@@ -145,20 +193,35 @@ export function AppShell() {
       )}
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
-          <Button variant="ghost" size="icon" aria-label={open ? "Cerrar menú" : "Abrir menú"} onClick={() => setOpen(!open)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            onClick={() => setOpen(!open)}
+          >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
           <span className="font-semibold">{org?.name ?? "Solicitudes"}</span>
           <Link to="/notificaciones" className="relative p-2" aria-label="Notificaciones">
             <Bell className="size-5" />
-            {unread > 0 && <span className="absolute right-0 top-0 size-2 rounded-full bg-destructive" />}
+            {unread > 0 && (
+              <span className="absolute right-0 top-0 size-2 rounded-full bg-destructive" />
+            )}
           </Link>
         </header>
         <main className="min-w-0 flex-1 p-4 md:p-8">
           {canAccessPath(role, path) ? (
             <Outlet />
           ) : (
-            <EmptyState title="Acceso restringido" description="No tiene permisos para ver esta sección." action={<Button asChild><Link to="/dashboard">Volver al dashboard</Link></Button>} />
+            <EmptyState
+              title="Acceso restringido"
+              description="No tiene permisos para ver esta sección."
+              action={
+                <Button asChild>
+                  <Link to="/dashboard">Volver al dashboard</Link>
+                </Button>
+              }
+            />
           )}
         </main>
       </div>
