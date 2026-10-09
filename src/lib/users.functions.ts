@@ -59,6 +59,15 @@ export const createUser = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const org = await requireAdmin(context as Ctx);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.department_id) {
+      const { data: department } = await supabaseAdmin
+        .from("departments")
+        .select("id")
+        .eq("id", data.department_id)
+        .eq("organization_id", org)
+        .maybeSingle();
+      if (!department) throw new Error("El departamento seleccionado no pertenece a su organización");
+    }
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
       password: data.password,
@@ -133,6 +142,15 @@ export const updateUser = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .single();
     if (!target || target.organization_id !== org) throw new Error("Usuario no encontrado");
+    if (data.department_id) {
+      const { data: department } = await supabaseAdmin
+        .from("departments")
+        .select("id")
+        .eq("id", data.department_id)
+        .eq("organization_id", org)
+        .maybeSingle();
+      if (!department) throw new Error("El departamento seleccionado no pertenece a su organización");
+    }
     const { error } = await supabaseAdmin
       .from("profiles")
       .update({
