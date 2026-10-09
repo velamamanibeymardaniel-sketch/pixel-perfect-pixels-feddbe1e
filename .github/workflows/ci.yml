@@ -34,6 +34,9 @@ jobs:
       - name: Run automated tests
         run: bun run test
 
+      - name: Type-check TypeScript
+        run: bunx tsc --noEmit
+
       - name: Run lint
         run: bun run lint
 
