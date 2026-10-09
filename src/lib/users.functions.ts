@@ -66,7 +66,7 @@ export const createUser = createServerFn({ method: "POST" })
         .eq("id", data.department_id)
         .eq("organization_id", org)
         .maybeSingle();
-if (!department)
+      if (!department)
         throw new Error("El departamento seleccionado no pertenece a su organización");
     }
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -150,7 +150,7 @@ export const updateUser = createServerFn({ method: "POST" })
         .eq("id", data.department_id)
         .eq("organization_id", org)
         .maybeSingle();
-if (!department)
+      if (!department)
         throw new Error("El departamento seleccionado no pertenece a su organización");
     }
     const { error } = await supabaseAdmin
